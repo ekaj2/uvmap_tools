@@ -29,7 +29,7 @@ bl_info = {
 
 
 def make_active(name):
-    uvs = bpy.context.scene.objects.active.data.uv_textures
+    uvs = bpy.context.view_layer.objects.active.data.uv_layers
     for uv in uvs:
         if uv.name == name:
             uvs.active = uv
@@ -38,7 +38,8 @@ def make_active(name):
 
 
 def move_to_bottom(index):
-    uvs = bpy.context.scene.objects.active.data.uv_textures
+#    uvs = bpy.context.scene.objects.active.data.uv_textures
+    uvs = bpy.context.view_layer.objects.active.data.uv_layers
     uvs.active_index = index
     new_name = uvs.active.name
 
@@ -59,7 +60,7 @@ class MoveUVMapDown(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        uvs = context.scene.objects.active.data.uv_textures
+        uvs = context.view_layer.objects.active.data.uv_layers
 
         # get the selected UV map
         orig_ind = uvs.active_index
@@ -89,7 +90,7 @@ class MoveUVMapUp(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        uvs = context.scene.objects.active.data.uv_textures
+        uvs = bpy.context.view_layer.objects.active.data.uv_layers
 
         if uvs.active_index == 0:
             return {'FINISHED'}
