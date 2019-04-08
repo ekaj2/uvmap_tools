@@ -20,9 +20,9 @@ from bpy.types import Operator
 
 bl_info = {
     "name": "UV Tools",
-    "author": "Jake Dube",
-    "version": (1, 0),
-    "blender": (2, 77, 0),
+    "author": "Jake Dube, cdeguise, bovesan",
+    "version": (1, 1),
+    "blender": (2, 80, 0),
     "location": "UV maps in properties window",
     "description": "Some tools for uv maps that should already be in Blender.",
     "category": "UV"}
