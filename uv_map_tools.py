@@ -20,12 +20,13 @@ from bpy.types import Operator
 
 bl_info = {
     "name": "UV Tools",
-    "author": "Jake Dube, cdeguise, bovesan",
+    "author": "Jake Dube, cdeguise, bovesan, Mahrkeenerh",
     "version": (1, 1),
     "blender": (2, 80, 0),
     "location": "UV maps in properties window",
     "description": "Some tools for uv maps that should already be in Blender.",
-    "category": "UV"}
+    "category": "UV"
+}
 
 
 def make_active(name):
@@ -38,7 +39,6 @@ def make_active(name):
 
 
 def move_to_bottom(index):
-#    uvs = bpy.context.scene.objects.active.data.uv_textures
     uvs = bpy.context.view_layer.objects.active.data.uv_layers
     uvs.active_index = index
     new_name = uvs.active.name
@@ -64,10 +64,14 @@ class MoveUVMapDown(Operator):
 
         # get the selected UV map
         orig_ind = uvs.active_index
-        orig_name = uvs.active.name
 
         if orig_ind == len(uvs) - 1:
             return {'FINISHED'}
+
+        orig_name = uvs.active.name
+
+        # save active render map name
+        active_render_name = [uv.name for uv in uvs if uv.active_render][0]
 
         # use "trick" on the one after it
         move_to_bottom(orig_ind + 1)
@@ -81,6 +85,9 @@ class MoveUVMapDown(Operator):
 
         make_active(orig_name)
 
+        # restore active render map
+        uvs[active_render_name].active_render = True
+
         return {'FINISHED'}
 
 
@@ -92,13 +99,19 @@ class MoveUVMapUp(Operator):
     def execute(self, context):
         uvs = bpy.context.view_layer.objects.active.data.uv_layers
 
-        if uvs.active_index == 0:
+        if uvs.active_index <= 0:
             return {'FINISHED'}
+
+        # save active render status
+        is_active_render = uvs.active.active_render
 
         original = uvs.active.name
         uvs.active_index -= 1
         bpy.ops.uv_tools.move_uvmap_down()
         make_active(original)
+
+        # restore active render status
+        uvs.active.active_render = is_active_render
 
         return {'FINISHED'}
 
