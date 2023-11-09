@@ -59,6 +59,18 @@ class MoveUVMapDown(Operator):
     bl_label = "Move Down"
     bl_options = {"REGISTER", "UNDO"}
 
+    @classmethod
+    def poll(cls, context):
+        if context.view_layer.objects.active is None:
+            return False
+        if context.view_layer.objects.active.type != 'MESH':
+            return False
+        if len(context.view_layer.objects.active.data.uv_layers) <= 1:
+            return False
+        if context.view_layer.objects.active.data.uv_layers.active_index >= len(context.view_layer.objects.active.data.uv_layers) - 1:
+            return False
+        return True
+
     def execute(self, context):
         uvs = context.view_layer.objects.active.data.uv_layers
 
@@ -95,6 +107,18 @@ class MoveUVMapUp(Operator):
     bl_idname = "uv_tools.move_uvmap_up"
     bl_label = "Move Up"
     bl_options = {"REGISTER", "UNDO"}
+
+    @classmethod
+    def poll(cls, context):
+        if context.view_layer.objects.active is None:
+            return False
+        if context.view_layer.objects.active.type != 'MESH':
+            return False
+        if len(context.view_layer.objects.active.data.uv_layers) <= 1:
+            return False
+        if context.view_layer.objects.active.data.uv_layers.active_index <= 0:
+            return False
+        return True
 
     def execute(self, context):
         uvs = bpy.context.view_layer.objects.active.data.uv_layers
